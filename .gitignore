@@ -1,17 +1,1 @@
-# Build artifacts
-dist/
-build/
-*.aux
-*.log
-*.out
-*.toc
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Editor/IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Add project specific items no present in ~/.gitignore_global
