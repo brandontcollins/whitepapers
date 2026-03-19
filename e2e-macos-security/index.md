@@ -15,7 +15,7 @@ The goal is to give developers and security-conscious users a concrete, actionab
 ## Download
 - **HTML:** [Read online](./dist/e2e-macos-security_v1.0.0.html)
 - **PDF:** [Download](./dist/e2e-macos-security_v1.0.0.pdf)
-- **Slides**: [Read online](./dist/macos-security-lunch-learn.html)
+- **Slides**: [Read online](./dist/macos-security-lunch-learn_v1.0.0.html)
 
 ## Contents
 
