@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="slides-format" content="viewport">
+    <title>End-to-End macOS Security Lunch & Learn</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind v4 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Tailwind theme -->
+    <style type="text/tailwindcss">
+        @theme {
+            --color-bg: #020617; /* near-black */
+            --color-bg-deep: #000000;
+            --color-surface: #020617;
+            --color-text: #e5fde2; /* soft green */
+            --color-text-secondary: #a3e7a0;
+            --color-text-muted: #6fbf73;
+            --color-accent-1: #00ff41; /* matrix green */
+            --color-accent-2: #22c55e; /* emerald */
+            --color-accent-3: #facc15; /* amber for warnings */
+            --color-glass-bg: rgba(4, 120, 87, 0.18); /* teal-ish glass */
+            --color-glass-border: rgba(34, 197, 94, 0.4);
+            --color-vignette: rgba(0, 0, 0, 0.65);
+            --font-display: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+    </style>
+
+    <style>
+        :root { --color-bg: #020617; --color-text: #e5fde2; --glow-color-rgb: 0,255,65; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { background: var(--color-bg); margin: 0; }
+        body { font-family: var(--font-body); color: var(--color-text); overflow: hidden; height: 100vh; width: 100vw; }
+        .deck { width: 100vw; height: 100vh; position: relative; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.95); transition: opacity 0.7s ease, transform 0.7s ease; pointer-events: none; overflow: hidden; }
+        .slide.active { opacity: 1; transform: scale(1); pointer-events: all; }
+        .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: clamp(1.5rem, 4vw, 4rem); }
+        .nav-controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; z-index: 100; background: var(--color-glass-bg); backdrop-filter: blur(10px); padding: 10px 24px; border-radius: 40px; border: 1px solid var(--color-glass-border); }
+        .nav-btn { width: 40px; height: 40px; border: none; background: rgba(15, 118, 110, 0.5); color: var(--color-accent-1); border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s, transform 0.2s; }
+        .nav-btn:hover { background: rgba(16, 185, 129, 0.8); transform: translateY(-1px); }
+        .slide-dots { display: flex; gap: 8px; }
+        .slide-dots .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(15, 118, 110, 0.7); cursor: pointer; transition: background 0.3s, transform 0.3s; }
+        .slide-dots .dot.active { background: var(--color-accent-1); transform: scale(1.3); }
+        .slide-counter { font-size: 0.8rem; color: var(--color-text-muted); min-width: 40px; text-align: center; }
+        .reveal { opacity: 0; transform: translateY(20px); }
+
+        .text-glow { text-shadow: 0 0 20px rgba(var(--glow-color-rgb), 0.5), 0 0 40px rgba(var(--glow-color-rgb), 0.2); }
+        .stat-glow { text-shadow: 0 0 30px rgba(var(--glow-color-rgb), 0.6), 0 0 60px rgba(var(--glow-color-rgb), 0.25); }
+        @keyframes glow-pulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(var(--glow-color-rgb), 0.5), 0 0 40px rgba(var(--glow-color-rgb), 0.2); }
+            50% { text-shadow: 0 0 30px rgba(var(--glow-color-rgb), 0.8), 0 0 60px rgba(var(--glow-color-rgb), 0.3); }
+        }
+        .glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+
+        @keyframes float-slow {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(60px, -50px) scale(1.12); }
+            50% { transform: translate(-40px, 40px) scale(0.9); }
+            75% { transform: translate(50px, 20px) scale(1.08); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        @keyframes float-drift {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(-50px, -60px) scale(1.15) rotate(3deg); }
+            66% { transform: translate(40px, 30px) scale(0.88) rotate(-2deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .gradient-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); animation: float-slow 14s ease-in-out infinite; }
+        .blob:nth-child(2) { animation: float-drift 18s ease-in-out infinite; }
+        .blob:nth-child(3) { animation: float-slow 22s ease-in-out infinite reverse; }
+
+        .slide::before {
+            content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            background-repeat: repeat; background-size: 256px 256px; opacity: 0.03; mix-blend-mode: overlay;
+        }
+        .slide::after {
+            content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 50%, var(--color-vignette) 100%);
+        }
+
+        .bar-chart { display: flex; align-items: flex-end; gap: clamp(0.4rem, 1vw, 0.75rem); height: clamp(120px, 20vh, 200px); }
+        .bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1; }
+        .bar { border-radius: 6px 6px 0 0; width: 100%; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+        }
+
+        .speaker-notes { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="mouse-spotlight" style="position:fixed;inset:0;z-index:99;pointer-events:none;"></div>
+
+<div class="deck">
+    <!-- Slide 1: Title -->
+    <div class="slide slide-1 active" data-slide="1">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 520px; height: 520px; top: -120px; right: -140px; background: var(--color-accent-1); opacity: 0.18;"></div>
+            <div class="blob" style="width: 360px; height: 360px; bottom: -120px; left: -80px; background: var(--color-accent-2); opacity: 0.16;"></div>
+            <div class="blob" style="width: 260px; height: 260px; top: 35%; left: 15%; background: var(--color-accent-3); opacity: 0.12;"></div>
+        </div>
+        <canvas class="particle-canvas" style="position: absolute; inset: 0; z-index: 1;"></canvas>
+        <div class="content text-center">
+            <div class="text-[120px] mb-5 animate-[float_3s_ease-in-out_infinite] drop-shadow-lg mx-auto">🛡️</div>
+            <h1 class="font-display text-[clamp(2.5rem,6vw,5rem)] font-black bg-linear-to-br from-accent-1 via-accent-2 to-accent-1 bg-clip-text text-transparent tracking-tight mb-4 reveal">End-to-End macOS Security</h1>
+            <p class="text-[clamp(0.9rem,1.5vw,1.4rem)] font-light text-text-muted tracking-[6px] uppercase reveal">Credentials, Encryption, Patch Management & Practical Demos</p>
+            <p class="mt-4 text-sm text-text-muted reveal">Lunch & Learn · ~45 minutes of content + Q&A</p>
+            <aside class="speaker-notes">
+                <p>Welcome everyone, and thanks for joining over lunch. This talk distills the End-to-End macOS Security whitepaper into a developer-focused walkthrough of how passwords, passkeys, hardware keys, encryption, and patch management fit together on macOS.</p>
+                <p>The target is web, iOS, Android, and backend developers who are already comfortable with tooling but may not have stitched these pieces into a coherent security posture yet.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 2: Agenda -->
+    <div class="slide slide-2" data-slide="2">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 380px; height: 380px; top: -80px; right: -80px; background: var(--color-accent-2); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -60px; left: -60px; background: var(--color-accent-1); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Agenda</h2>
+            <ul class="mt-6 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Password lifecycle, entropy, and why length & randomness beat complexity rules</li>
+                <li class="reveal">Password managers in 2026, breach history, and a 1Password demo workflow</li>
+                <li class="reveal">Passkeys & hardware security keys (YubiKey) with real-world login flows</li>
+                <li class="reveal">macOS updates & Rapid Security Responses, then browser and install security zoom-ins</li>
+                <li class="reveal">Encryption on macOS: FileVault, encrypted containers, and iCloud strategies</li>
+                <li class="reveal">Concrete strategies and a 90-day implementation roadmap for developers</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>I will move roughly in this order: credentials first, then platform features, then concrete strategies.</p>
+                <p>We will pause briefly for two demos: one in 1Password using a test vault, and one using a YubiKey with services like Jira/Confluence and GitLab, plus callouts to Apple and Google as identity hubs that are high-value SIM-swap targets.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 3: Why devs should care -->
+    <div class="slide slide-3" data-slide="3">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 380px; height: 380px; top: -60px; right: -120px; background: var(--color-accent-1); opacity: 0.13;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-3); opacity: 0.12;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Why this matters to developers</h2>
+            <ul class="mt-6 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Developer laptops often hold access to prod instances, secrets, and admin consoles, making them high-value targets.</li>
+                <li class="reveal">Compromise routes are usually boring: weak passwords, password reuse, unpatched browsers, or unsafe tooling installs.</li>
+                <li class="reveal">Security guidelines like NIST SP 800-63B and 800-40 assume well-patched endpoints; outdated macOS hosts undermine otherwise strong auth.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>As developers we tend to think about application bugs, but most real-world compromises start from endpoint weaknesses: a stolen laptop, credential stuffing, or a malicious dependency or installer.</p>
+                <p>Standards like NIST SP 800-63B for digital identity and SP 800-40 for patch management explicitly assume your endpoints are patched and hardened; if your macOS host is behind on security updates, the security of passkeys or hardware keys on top of it is degraded.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 4: Password lifecycle -->
+    <div class="slide slide-4" data-slide="4">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -80px; background: var(--color-accent-2); opacity: 0.11;"></div>
+            <div class="blob" style="width: 240px; height: 240px; bottom: -60px; left: -40px; background: var(--color-accent-1); opacity: 0.09;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Lifecycle of a password</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">From your keyboard to a breached database: six stages where things can go wrong.</p>
+            <ol class="mt-4 space-y-2 text-text-secondary text-lg">
+                <li class="reveal">Input on your device: can be stolen by keyloggers, clipboard grabbers, or phishing pages.</li>
+                <li class="reveal">Transmission over the network: should be protected by HTTPS/TLS; HTTP means cleartext credentials.</li>
+                <li class="reveal">Server hashing & salting: modern algorithms like bcrypt or Argon2, plus per-user salts.</li>
+                <li class="reveal">Database storage & verification: only salted hashes stored; login recomputes and compares.</li>
+                <li class="reveal">Breach scenario: attackers get hashes + salts and start offline guessing attacks.</li>
+            </ol>
+            <aside class="speaker-notes">
+                <p>This whitepaper walks through the full lifecycle of a password: creation, transmission, hashing, storage, login, and breach.</p>
+                <p>For this talk the key point is that once an attacker has a database of hashes, the only remaining defense is the entropy of the passwords you and your users chose, which is why we care so much about length and randomness rather than arbitrary complexity rules.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 5: Entropy vs complexity -->
+    <div class="slide slide-5" data-slide="5">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 340px; height: 340px; top: -60px; right: -60px; background: var(--color-accent-1); opacity: 0.11;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -60px; background: var(--color-accent-3); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Password entropy beats complexity rules</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Modern guidance emphasizes length and randomness over forced symbols or frequent changes.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Entropy measures how many guesses an attacker needs; each extra bit doubles the search space.</li>
+                <li class="reveal">Short, "complex" strings like <code>P@ssw0rd!</code> have far less entropy than a long random or diceware passphrase.</li>
+                <li class="reveal">16+ random characters or 5–6 diceware words provide strong resistance to offline cracking.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>NIST and others have moved away from old-school complexity rules toward longer, higher-entropy secrets that users do not have to rotate arbitrarily unless there is evidence of compromise.</p>
+                <p>A memorable multi-word passphrase or a long random manager-generated string gives you dozens of extra bits of entropy compared to "Password123!", and that difference is the gap between hours of cracking and geological time.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 6: Creating strong secrets -->
+    <div class="slide slide-6" data-slide="6">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 340px; height: 340px; top: -80px; right: -40px; background: var(--color-accent-2); opacity: 0.11;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -60px; background: var(--color-accent-1); opacity: 0.09;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Practical ways to get high entropy</h2>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Use a manager to generate 16–20 character random passwords for normal accounts; never reuse them.</li>
+                <li class="reveal">Use 5–6 word diceware-style passphrases or manager-generated passphrases for master passwords and Apple ID.</li>
+                <li class="reveal">Optionally add a memorized "user-side salt" suffix to a few ultra-critical passwords to blunt manager breach impact.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>We will see in the 1Password demo how easy it is to let the manager generate random strings and then forget them; your brain should only have to retain one or two high-value passphrases plus any memorized salt patterns you decide to use for a handful of accounts.</p>
+                <p>As developers, the bare minimum is unique manager-generated passwords for everything, and higher-entropy passphrases for Apple ID, your password manager master account, and primary email.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 7: Password managers & breaches -->
+    <div class="slide slide-7" data-slide="7">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -80px; background: var(--color-accent-1); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-3); opacity: 0.11;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Password managers in 2026</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Managers are essential, but they create a single very juicy vault, so history and design matter.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Apple Passwords (iCloud Keychain), 1Password, and Bitwarden all use zero-knowledge designs with local decryption.</li>
+                <li class="reveal">LastPass suffered a major vault exfiltration in 2022; weak master passwords have been cracked and used in real attacks through 2025.</li>
+                <li class="reveal">For Apple-only users, iCloud Keychain is a solid baseline; cross-platform workflows benefit from 1Password or Bitwarden.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>Managers give you unique, high-entropy passwords and breach monitoring, but they also create a single encrypted blob that is incredibly valuable if it leaks; the LastPass incident proves that the quality of the provider and your master password both matter enormously.</p>
+                <p>In this talk I will use 1Password in the demo, but the patterns apply just as well to Apple Passwords or Bitwarden; the important thing is to pick one solid manager and use it everywhere.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 8: 1Password demo -->
+    <div class="slide slide-8" data-slide="8">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -60px; background: var(--color-accent-2); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -60px; background: var(--color-accent-1); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Demo: 1Password on a test vault</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Walkthrough: turning theory into daily practice.</p>
+            <ol class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Show a high-entropy master passphrase and explain why it is unique and memorized.</li>
+                <li class="reveal">Create a new login, letting 1Password generate a 20-character random password and saving it.</li>
+                <li class="reveal">Demonstrate domain-bound autofill on a real site and how 1Password refuses to fill on a phishing domain.</li>
+                <li class="reveal">Open Watchtower/security reports to show weak/reused password and breach alerts.</li>
+                <li class="reveal">Optionally show a passphrase generator and where you could document a user-side salt for a critical account.</li>
+            </ol>
+            <aside class="speaker-notes">
+                <p>Here I will switch to 1Password on my test vault, create a new login, and emphasize that I never see or memorize the site password; the only thing I have to carry in my head is the master passphrase and maybe a small salt pattern.</p>
+                <p>I will also deliberately visit a lookalike domain to show that autofill does not trigger when the hostname does not match, which is one of the simplest but most powerful anti-phishing properties of modern managers.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 9: Passkeys overview -->
+    <div class="slide slide-9" data-slide="9">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -60px; right: -80px; background: var(--color-accent-1); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-2); opacity: 0.09;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Passkeys (FIDO2/WebAuthn)</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Public-key credentials that replace passwords and are bound to the real site.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">During registration, your device or security key creates a keypair; the private key never leaves your hardware.</li>
+                <li class="reveal">At login, the site sends a challenge which is signed with the private key after local biometric or PIN approval.</li>
+                <li class="reveal">Servers store only public keys, so bulk database breaches do not expose any shared secrets.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>As application developers you will increasingly be asked to integrate WebAuthn flows; seeing them from the macOS user side helps you design better UX and threat models.</p>
+                <p>Passkeys give you phishing resistance because the authenticator will only sign challenges for the origin it was registered with; a visually perfect clone at a different domain cannot trick the key into authenticating.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 10: Hardware security keys overview -->
+    <div class="slide slide-10" data-slide="10">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -80px; background: var(--color-accent-1); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-3); opacity: 0.11;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Hardware security keys (YubiKey, Titan)</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Physical authenticators that keep private keys off your Mac entirely.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Implement FIDO2/WebAuthn and other standards; keys never leave the device, and operations require a touch and often a PIN.</li>
+                <li class="reveal">Used as second factor or as a true passkey store (resident credentials) for high-value accounts.</li>
+                <li class="reveal">Best used in pairs (primary + backup) for Apple ID, password manager accounts, email, banks, and developer SSO.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>Hardware keys are where this gets truly phishing-resistant: there is no OTP code you can accidentally type into a fake site, and the private key material never touches macOS memory at all.</p>
+                <p>As devs, your Apple ID, Google account, and password manager are all identity hubs; protecting them with hardware keys dramatically raises the bar for account takeover and SIM-swap-style fraud.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 11: YubiKey demo -->
+    <div class="slide slide-11" data-slide="11">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -60px; right: -80px; background: var(--color-accent-2); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -60px; background: var(--color-accent-1); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Demo: YubiKey with Apple, Google, Jira, GitLab</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">End-to-end example of hardening identity hubs and dev tooling.</p>
+            <ol class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Show Apple ID security settings, registering two YubiKeys and disabling SMS as a primary factor where possible.</li>
+                <li class="reveal">Show Google account with Advanced Protection or security keys enabled, highlighting SIM-swap resistance vs SMS codes.</li>
+                <li class="reveal">Walk through logging into Jira/Confluence and GitLab using the same key as a FIDO2 factor.</li>
+                <li class="reveal">Call out what happens if the laptop is stolen without the key vs if the key is stolen without the laptop.</li>
+            </ol>
+            <aside class="speaker-notes">
+                <p>Here I will switch to browser-based flows and show three things: protecting Apple ID, protecting Google, and then reusing the same hardware key for high-value SaaS like Jira and GitLab that control your code and incidents.</p>
+                <p>The story to land is that SMS is fundamentally vulnerable to SIM swap and social engineering against carriers, whereas security keys require both physical possession and your local approval.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 12: macOS updates & security responses -->
+    <div class="slide slide-12" data-slide="12">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -80px; background: var(--color-accent-1); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-2); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">macOS versions, updates, and Rapid Security Responses</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Patch discipline is a first-class security control, not optional housekeeping.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Stay on a supported major macOS release (current or N−1) and apply point releases promptly.</li>
+                <li class="reveal">Leave <span class="font-semibold">Security Responses and system files</span> enabled so WebKit, XProtect, Gatekeeper rules, and other security data update in the background.</li>
+                <li class="reveal">In managed fleets, MDM should enforce timelines and limit deferrals, aligning with NIST SP 800‑40 patch SLAs.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>This is the pivot from credentials into OS hygiene: Rapid Security Responses and security-configuration updates ship out-of-band specifically to close actively exploited vulnerabilities, often in Safari/WebKit.</p>
+                <p>As developers you should treat "current and patched" as a baseline requirement for accessing prod, not an afterthought, and MDM policies are increasingly codifying that.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 13: Browser security zoom-in -->
+    <div class="slide slide-13" data-slide="13">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -60px; background: var(--color-accent-2); opacity: 0.13;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -60px; background: var(--color-accent-1); opacity: 0.11;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Zoom in: browser security (Brave, Safari, Chrome, Firefox)</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Your browser is usually the first thing attackers hit.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal"><span class="font-semibold">Brave</span>: built‑in Shields block ads, third‑party trackers, and many fingerprinting vectors by default; optional Tor windows route traffic through Tor relays for added network anonymity.</li>
+                <li class="reveal"><span class="font-semibold">Safari</span>: Intelligent Tracking Prevention and per‑tab sandboxing limit cross‑site tracking and keep compromised tabs from pivoting into the OS; recent updates strengthen fingerprinting defenses in Private Browsing.</li>
+                <li class="reveal"><span class="font-semibold">Chrome & Firefox</span>: Chromium has long had strong site‑isolation and sandboxing, and Firefox has recently closed much of the sandbox gap with higher isolation levels and Fission on desktop and Android.</li>
+                <li class="reveal">For devs: keep at least one hardened profile with minimal extensions, strict privacy settings, and automatic updates turned on for everyday browsing of sensitive sites.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>I am not here to pick a winner, but to highlight tradeoffs: Brave and Safari lean into privacy by default, Chrome prioritizes compatibility and rapid updates, and Firefox has caught up significantly on sandboxing while keeping a strong privacy posture.</p>
+                <p>Whichever you use daily, turn on automatic updates, be conservative with extensions, and consider a separate hardened profile for admin consoles and cloud dashboards so one malicious site cannot ride along on your everyday browsing.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 14: Application installation security zoom-in -->
+    <div class="slide slide-14" data-slide="14">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -60px; right: -80px; background: var(--color-accent-1); opacity: 0.13;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-3); opacity: 0.11;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Zoom in: app install security (App Store, Homebrew, direct)</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">How you install tools on macOS changes your supply-chain risk profile.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal"><span class="font-semibold">Mac App Store</span>: apps are reviewed and signed by Apple; Gatekeeper trusts them without separate notarization and checks for known malware at first launch.</li>
+                <li class="reveal"><span class="font-semibold">Direct downloads</span>: Gatekeeper verifies the developer signature and Apple notarization for apps from the web; unsigned or tampered binaries trigger explicit warnings or blocking.</li>
+                <li class="reveal"><span class="font-semibold">Homebrew</span>: formulae pull signed macOS binaries (bottles); proposals add Sigstore-based bottle signing so <code>brew install</code> only uses artifacts with a valid attestation, mitigating tampering in storage or build pipelines.</li>
+                <li class="reveal">Guideline: prefer App Store for end‑user apps, use Homebrew for CLI tools from trusted taps, and minimize bypassing Gatekeeper or running unsigned installers.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>Developers install a lot of tooling, and that tooling often runs with full user privileges; Gatekeeper, notarization, and emerging features like Homebrew bottle signing are there to make supply-chain compromise harder, but only if you respect the warnings.</p>
+                <p>For this audience I would suggest: App Store when you can, Homebrew for mainstream CLI tooling, and only bypass Gatekeeper when you have positively verified the vendor and checksum and are comfortable owning the extra risk.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 15: FileVault -->
+    <div class="slide slide-15" data-slide="15">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -80px; background: var(--color-accent-2); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -60px; background: var(--color-accent-1); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">FileVault: full‑disk encryption baseline</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Protects data at rest on every Mac you care about.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Encrypts the entire startup disk with XTS‑AES; transparent on modern Apple silicon and T2 Macs.</li>
+                <li class="reveal">Mandatory for laptops and shared machines; prevents offline disk access if a device is stolen.</li>
+                <li class="reveal">Recovery keys can be escrowed to iCloud or MDM; high‑risk users may prefer offline-only storage for maximum control.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>FileVault is usually already enabled on current macOS installs, but it is worth verifying; without it, a stolen Mac is a straightforward offline data-extraction problem.</p>
+                <p>For corporate-managed Macs, IT may escrow the recovery key; if your threat model includes insider compromise, you can add additional encryption layers on top of FileVault to keep some data private even from the organization.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 16: Encrypted images & iCloud -->
+    <div class="slide slide-16" data-slide="16">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -60px; right: -80px; background: var(--color-accent-1); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-3); opacity: 0.11;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Encrypted containers & iCloud</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Selective, portable encryption for the data you really care about.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Encrypted disk images (.dmg, .sparsebundle) act as on‑demand encrypted volumes with their own strong passphrases.</li>
+                <li class="reveal">Storing those images in iCloud Drive gives you a double layer: iCloud’s encryption plus your independent container key.</li>
+                <li class="reveal">Nested images on top of FileVault let you keep especially sensitive material private even on managed Macs with escrowed recovery keys.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>For developers, this pattern is ideal for things like client data samples, legal documents, or long-lived cryptographic material that should not be visible to IT or synced in plaintext to any provider.</p>
+                <p>The workflow is simple: create a sparsebundle with a strong passphrase, store it locally or in iCloud, mount it only when you need it, and unmount when you are done; everything inside stays encrypted at rest on every hop.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 17: Strategies overview -->
+    <div class="slide slide-17" data-slide="17">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -80px; background: var(--color-accent-2); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-1); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Picking a strategy that fits you</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">From "Apple‑only moderate" to "cross‑platform hardened".</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal"><span class="font-semibold">Apple‑only, moderate:</span> FileVault on, iCloud Keychain, strong Apple ID passphrase, standard 2FA, optional encrypted image for a few sensitive folders.</li>
+                <li class="reveal"><span class="font-semibold">Apple‑only, hardened:</span> add two YubiKeys on Apple ID, enable Advanced Data Protection, use diceware passphrases and user‑side salting for 5–10 critical accounts.</li>
+                <li class="reveal"><span class="font-semibold">Cross‑platform dev:</span> 1Password or Bitwarden with hardware‑key 2FA, OS‑native disk encryption on every platform, and optional encrypted containers for ultra‑sensitive material.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>In the whitepaper these show up as Strategies 1–3; for this room, many of you are probably either "Apple-only hardened" or "cross-platform dev" because you have personal Macs plus work Windows or Linux machines.</p>
+                <p>The main variables between strategies are where your credentials live (Apple-only vs manager), whether you bring hardware keys into the mix, and how much additional compartmentalization you need for high-risk work.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 18: Developer-specific access -->
+    <div class="slide slide-18" data-slide="18">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -60px; right: -80px; background: var(--color-accent-1); opacity: 0.13;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -60px; background: var(--color-accent-3); opacity: 0.11;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">Developer access to sensitive instances</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Minimum bar when your Mac can reach prod or high-value crypto material.</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal">Unique accounts per developer, with phishing‑resistant MFA (hardware key or platform authenticator) required for sensitive systems.</li>
+                <li class="reveal">Compliant devices only: FileVault enabled, current macOS with security responses on, and MDM enrollment where applicable.</li>
+                <li class="reveal">Least privilege and logging: narrow access scopes, and regular reviews of who can reach what.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>If you work with production data, encryption keys, or financial flows, you should assume that your laptop is part of your organization’s security boundary and treat its configuration accordingly.</p>
+                <p>Everything we have talked about so far—strong credentials, passkeys, hardware keys, encryption, and disciplined patching—feeds into meeting that baseline for developer access to sensitive instances.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 19: 90-day roadmap -->
+    <div class="slide slide-19" data-slide="19">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 360px; height: 360px; top: -80px; right: -80px; background: var(--color-accent-2); opacity: 0.12;"></div>
+            <div class="blob" style="width: 260px; height: 260px; bottom: -80px; left: -40px; background: var(--color-accent-1); opacity: 0.1;"></div>
+        </div>
+        <div class="content">
+            <h2 class="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold reveal">90‑day implementation roadmap</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Small, time‑boxed steps to move from "nice idea" to "actually done".</p>
+            <ul class="mt-4 space-y-2 text-lg text-text-secondary">
+                <li class="reveal"><span class="font-semibold">Month 1:</span> verify FileVault, enable or adopt a password manager, and set a strong Apple ID/master passphrase.</li>
+                <li class="reveal"><span class="font-semibold">Month 2:</span> rotate critical account passwords to manager‑generated ones and enable 2FA everywhere it is offered.</li>
+                <li class="reveal"><span class="font-semibold">Month 3:</span> buy and register two hardware keys, start registering passkeys, and create at least one encrypted container for sensitive data.</li>
+            </ul>
+            <aside class="speaker-notes">
+                <p>This roadmap mirrors the one at the end of the whitepaper and is designed to be realistic for busy developers; you do not need to transform everything in a weekend.</p>
+                <p>If you already have some of this in place, skip ahead or use the time to help your team adopt hardware keys and passkeys for your shared tooling.</p>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Slide 20: Q&A -->
+    <div class="slide slide-20" data-slide="20">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 520px; height: 520px; top: -120px; right: -140px; background: var(--color-accent-1); opacity: 0.2;"></div>
+            <div class="blob" style="width: 360px; height: 360px; bottom: -120px; left: -100px; background: var(--color-accent-2); opacity: 0.18;"></div>
+            <div class="blob" style="width: 260px; height: 260px; top: 40%; left: 10%; background: var(--color-accent-3); opacity: 0.14;"></div>
+        </div>
+        <canvas class="particle-canvas" style="position: absolute; inset: 0; z-index: 1;"></canvas>
+        <div class="content text-center">
+            <h2 class="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold text-glow glow-pulse reveal">Questions & discussion</h2>
+            <p class="mt-4 text-text-secondary text-lg reveal">Happy to dig deeper into any of the demos, browser and tooling setups, or threat models.</p>
+            <aside class="speaker-notes">
+                <p>Leave time here to take questions about specific workflows—Homebrew vs Mac App Store, Brave vs Safari vs Chrome vs Firefox for daily use, or how to roll out hardware keys and passkeys to a dev team incrementally.</p>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<div class="nav-controls">
+    <button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button>
+    <div class="slide-dots" id="dots"></div>
+    <button class="nav-btn" onclick="changeSlide(1)">&#8250;</button>
+    <span class="slide-counter" id="counter">1 / 20</span>
+</div>
+
+<script>
+    let current = 1;
+    const total = document.querySelectorAll('.slide').length;
+    const dotsContainer = document.getElementById('dots');
+    const counter = document.getElementById('counter');
+    for (let i = 1; i <= total; i++) { const dot = document.createElement('div'); dot.className = 'dot' + (i === 1 ? ' active' : ''); dot.onclick = () => goToSlide(i); dotsContainer.appendChild(dot); }
+    function goToSlide(n) {
+        const prev = document.querySelector('.slide.active');
+        const next = document.querySelector(`.slide[data-slide="${n}"]`);
+        if (prev) prev.classList.remove('active');
+        if (next) { next.classList.add('active'); animateSlide(next); }
+        current = n; updateNav();
+    }
+    function changeSlide(dir) { let next = current + dir; if (next < 1) next = total; if (next > total) next = 1; goToSlide(next); }
+    function updateNav() { document.querySelectorAll('.dot').forEach((d, i) => { d.classList.toggle('active', i + 1 === current); }); counter.textContent = current + ' / ' + total; }
+    document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); } });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', (e) => { const diff = touchStartX - e.changedTouches[0].clientX; if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1); });
+
+    function animateSlide(slide) {
+        slide.querySelectorAll('.reveal').forEach((el, i) => {
+            el.style.transition = 'none';
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.offsetHeight;
+            const delay = i * 0.08;
+            el.style.transition = `opacity 0.35s ease ${delay}s, transform 0.35s ease ${delay}s`;
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0px)';
+        });
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        const spotlight = document.querySelector('.mouse-spotlight');
+        if (spotlight) {
+            const rgb = getComputedStyle(document.documentElement).getPropertyValue('--glow-color-rgb').trim() || '0,255,65';
+            spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(${rgb}, 0.08), transparent 40%)`;
+        }
+    });
+
+    (function() {
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        (function tick() {
+            const ox = (mouseX - cx) / cx, oy = (mouseY - cy) / cy;
+            document.querySelectorAll('.deco-shape').forEach(shape => {
+                const speed = parseFloat(shape.dataset.speed) || 0.03;
+                shape.style.transform = `translate(${ox * speed * 100}px, ${oy * speed * 100}px)`;
+            });
+            requestAnimationFrame(tick);
+        })();
+    })();
+
+    window.initParticles = function(canvas, options) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        const interactive = options.interactive !== false;
+        const count = options.count || (interactive ? 55 : 18);
+        let mx = -1000, my = -1000;
+        const rgb = getComputedStyle(document.documentElement).getPropertyValue('--glow-color-rgb').trim() || '0,255,65';
+        const [r, g, b] = rgb.split(',').map(Number);
+        const particles = Array.from({ length: count }, () => ({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+            size: Math.random() * 2.5 + 0.8, alpha: Math.random() * 0.35 + 0.1
+        }));
+        if (interactive) {
+            canvas.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mx = e.clientX - rect.left; my = e.clientY - rect.top; });
+            canvas.addEventListener('mouseleave', () => { mx = -1000; my = -1000; });
+        }
+        (function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                if (interactive) {
+                    const dx = p.x - mx, dy = p.y - my, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) { const force = (120 - dist) / 120 * 2; p.vx += (dx / dist) * force * 0.1; p.vy += (dy / dist) * force * 0.1; }
+                }
+                p.vx *= 0.98; p.vy *= 0.98; p.x += p.vx; p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r},${g},${b},${p.alpha})`; ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        })();
+    };
+    document.querySelectorAll('.particle-canvas').forEach(c => window.initParticles(c, { interactive: true, count: 55 }));
+    document.querySelectorAll('.particle-canvas-ambient').forEach(c => window.initParticles(c, { interactive: false, count: 18 }));
+
+    try { animateSlide(document.querySelector('.slide.active')); } catch(e) { console.warn('Initial animation error:', e); }
+</script>
+
+</body>
+</html>
