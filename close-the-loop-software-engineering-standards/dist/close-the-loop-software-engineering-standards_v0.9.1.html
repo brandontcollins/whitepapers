@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>close-the-loop-software-engineering-standards_v0.9.1</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+  body {
+    padding: 2cm; 
+  }
+}
+</style>
+
+<style type="text/css">
+/* HTML Export & Screen Preview - Paragraph Text Wrapping
+ *
+ * This stylesheet provides universal text wrapping styles for HTML exports
+ * and screen preview. It ensures long words and URLs wrap properly within
+ * their containers instead of causing horizontal overflow.
+ *
+ * Issue: #30
+ * Based on: PR #1320 from MacDownApp/macdown by @radicm
+ *
+ * Note: This file loads LAST in the stylesheet cascade to ensure it can
+ * override theme defaults when necessary.
+ */
+
+/* Main paragraph wrapping - handles regular prose with long words/URLs */
+p {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* List items - ensure long text in lists wraps properly */
+li {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Table cells - handle long content in tables */
+td, th {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Blockquotes - ensure quoted content wraps */
+blockquote {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Description list definitions */
+dd {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Body fallback - catch any edge cases via inheritance */
+body {
+    word-wrap: break-word;  /* Legacy property for older browsers */
+    overflow-wrap: break-word;
+}
+
+/* NOTE: Code elements are NOT targeted here.
+ * Code blocks use different wrapping rules (white-space: pre-wrap)
+ * which are handled by print.css for PDF exports.
+ * For screen preview and HTML export, code blocks maintain their
+ * natural overflow behavior with horizontal scrolling.
+ */
+</style>
+
+
+</head>
+
+<body>
+
+<h1>Close the Loop: Software Engineering Standards for Code, Data, and Delivery</h1>
+
+<p><strong>Version:</strong> 0.9.1 Draft<br>
+<strong>Effective Date:</strong> 2026-08-23<br>
+<strong>Last Updated:</strong> 2026-05-31<br>
+<strong>Document Owner:</strong> Beyond The Code LLC<br>
+<strong>License:</strong> CC BY 4.0</p>
+
+<h2>Table of Contents</h2>
+
+<ol>
+<li><a href="#1-introduction">Introduction</a><br></li>
+<li><a href="#2-design-and-delivery-philosophy">Design and Delivery Philosophy</a><br></li>
+<li><a href="#3-core-engineering-principles">Core Engineering Principles</a><br></li>
+<li><a href="#4-requirements-and-planning">Requirements and Planning</a><br></li>
+<li><a href="#5-reference-standards-and-guidelines">Reference Standards and Guidelines</a><br></li>
+<li><a href="#6-data-design-and-management">Data Design and Management</a><br></li>
+<li><a href="#7-architecture-and-system-design">Architecture and System Design</a><br></li>
+<li><a href="#8-source-control-and-branching-standards-git">Source Control and Branching Standards (Git)</a><br></li>
+<li><a href="#9-coding-standards-and-practices">Coding Standards and Practices</a><br></li>
+<li><a href="#10-documentation-standards">Documentation Standards</a><br></li>
+<li><a href="#11-accessibility-and-inclusive-design">Accessibility and Inclusive Design</a><br></li>
+<li><a href="#12-testing-and-quality-assurance">Testing and Quality Assurance</a><br></li>
+<li><a href="#13-continuous-integration-and-continuous-delivery-cicd">Continuous Integration and Continuous Delivery (CI/CD)</a><br></li>
+<li><a href="#14-performance-and-resource-management">Performance and Resource Management</a><br></li>
+<li><a href="#15-observability-logging-and-operations">Observability, Logging, and Operations</a><br></li>
+<li><a href="#16-compliance-risk-and-dependency-management">Compliance, Risk, and Dependency Management</a><br></li>
+<li><a href="#17-legacy-systems">Legacy Systems</a><br></li>
+<li><a href="#18-technical-debt-management">Technical Debt Management</a><br></li>
+<li><a href="#19-governance-and-evolution">Governance and Evolution</a><br></li>
+<li><a href="#appendix-a--references-and-links">Appendix A – References and Links</a><br></li>
+<li><a href="#revision-history">Revision History</a><br></li>
+<li><a href="#legal-and-licensing-notice">Legal and Licensing Notice</a></li>
+</ol>
+
+<hr>
+
+<h2>1. Introduction</h2>
+
+<h3>1.1 Purpose</h3>
+
+<p>This document defines a consistent, technology-agnostic set of software engineering standards for building, delivering, and evolving production systems. It is intended as a practical reference for engineers, architects, testers, managers, and AI assistants who participate in the software delivery lifecycle.</p>
+
+<p>The goal is to help teams build systems that are secure, maintainable, accessible, performant, and compliant with applicable policies, while recognizing that software is built over time in iterative steps rather than as a single, fully formed product.</p>
+
+<h3>1.2 Applicability</h3>
+
+<p>These standards apply to software implemented in, but not limited to, Swift, Java, C, C#, C++, VB.NET, Ruby, Rust, Go, JavaScript/TypeScript, and associated frameworks. They cover web, mobile, desktop, backend, and embedded systems, including cloud-native and on-premises deployments.</p>
+
+<p>The guidance is designed for commercial products, internal business applications, and regulated environments (such as federal agencies) where security, privacy, accessibility, and auditability requirements are common.</p>
+
+<h3>1.3 Scope and Relationship to Other Standards</h3>
+
+<p>This document focuses on <strong>how software is designed, implemented, tested, and delivered</strong>. It supports, but does not replace, broader information security or compliance frameworks.</p>
+
+<p>Where appropriate, it points to external standards and references, especially in areas such as accessibility and security. For example, it is compatible with practices needed to implement controls from security and privacy control catalogs, digital accessibility regulations, and related guidelines, but it does not attempt to restate those documents in full.</p>
+
+<h3>1.4 Audience</h3>
+
+<p>Primary audiences include:</p>
+
+<ul>
+<li>Software engineers and architects who design and implement systems.</li>
+<li>Test and QA engineers who verify behavior and non-functional requirements.</li>
+<li>Product owners and managers who shape scope and priorities.</li>
+<li>Operations and SRE teams who deploy and run systems.</li>
+<li>AI-based tools and assistants that generate, analyze, or transform code and configuration.</li>
+</ul>
+
+<p>Readers should be familiar with basic software engineering concepts. Where specific technologies are mentioned, they are used as <strong>examples</strong>, not requirements.</p>
+
+<h3>1.5 Mandatory vs Recommended Guidance</h3>
+
+<p>Each section contains a mix of <strong>Mandatory</strong> and <strong>Recommended</strong> practices:</p>
+
+<ul>
+<li><strong>Mandatory</strong>: Requirements that must be followed unless a documented exception is granted through the governance process.</li>
+<li><strong>Recommended</strong>: Preferred practices that should be used where feasible, but can be adapted for specific contexts when justified.</li>
+</ul>
+
+<h3>1.6 The “Close the Loop” Theme</h3>
+
+<p>A central theme of this document is the idea that software engineering is a <strong>closed loop</strong> process:</p>
+
+<blockquote>
+<p>develop → test and observe → gather feedback → revise/refactor → continue</p>
+</blockquote>
+
+<p>The standards that follow are designed to support this loop in a deliberate, disciplined way so that both humans and AI models can learn from outcomes and improve future iterations.</p>
+
+<hr>
+
+<h2>2. Design and Delivery Philosophy</h2>
+
+<p>This section captures the overarching mindset that informs the rest of the document. It integrates several key ideas:</p>
+
+<ul>
+<li>Reusable design patterns and shared vocabulary for communication.</li>
+<li>UI-first and prototype-driven development where appropriate.</li>
+<li>Architecture patterns and interface contracts for modularity.</li>
+<li>Simplicity, explicitness, and readability as guiding values.</li>
+<li>Experience and learning as core engineering concerns.</li>
+<li>Iterative delivery and refactoring as a continuous loop.</li>
+</ul>
+
+<h3>2.1 Patterns and Shared Vocabulary (GoF and Beyond)</h3>
+
+<p><strong>Intent</strong></p>
+
+<p>Encourage the use of widely understood design patterns to solve recurring problems consistently and to provide a common language for design discussions.</p>
+
+<p><strong>Guidance</strong></p>
+
+<ul>
+<li>Design patterns such as those documented in classic catalogs should be used as <strong>vocabulary and guidance</strong>, not as rigid prescriptions.</li>
+<li>Patterns are most valuable when they help:
+
+<ul>
+<li>Clarify intent in code and design discussions.</li>
+<li>Encapsulate variation (algorithms, policies, object creation).</li>
+<li>Reduce coupling and improve substitutability.</li>
+</ul></li>
+<li>Teams should favor patterns that emphasize programming to abstractions, composition over inheritance, and clear separation of responsibilities.</li>
+</ul>
+
+<h3>2.2 UI-First and Prototype-Driven Development</h3>
+
+<p><strong>Intent</strong></p>
+
+<p>Use UI-first and prototype-driven approaches to clarify requirements and workflows early, especially for user-heavy, interaction-centric systems.</p>
+
+<p><strong>Guidance</strong></p>
+
+<ul>
+<li>For non-technical stakeholders, unclear product vision, or highly appearance-focused solutions (such as mobile apps and UI-centric platforms), teams are encouraged to:
+
+<ul>
+<li>Build <strong>horizontal prototypes</strong> of key flows (e.g., storyboards, click-through prototypes, mock screens) to establish navigation and interaction patterns.</li>
+<li>Implement <strong>vertical slices</strong> of end-to-end functionality within those prototypes to validate feasibility and behavior.</li>
+</ul></li>
+<li>Feedback from prototype usage should be treated as a primary input to requirements, data modeling, and architectural decisions, not just visual polish.</li>
+<li>Backend services and data structures should be designed to support the validated workflows and data entry patterns discovered through prototyping.</li>
+</ul>
+
+<blockquote>
+<p><strong>AI Guidance (for assistants generating UI and flows):</strong><br>
+<em>Prefer incremental prototypes and vertical slices that can be reviewed and refined over time. Avoid attempting to generate an entire application UI and backend in one step without opportunity for human feedback.</em></p>
+</blockquote>
+
+<h3>2.3 Architecture Patterns and Interface Contracts</h3>
+
+<p><strong>Intent</strong></p>
+
+<p>Apply architecture patterns and stable interface contracts to keep systems modular, testable, and adaptable over time.</p>
+
+<p><strong>Guidance</strong></p>
+
+<ul>
+<li>Architecture patterns (such as layered architectures, hexagonal/ports-and-adapters, and clean-style designs) should be selected based on context, not habit.</li>
+<li>Presentation-level patterns (such as MVC, MVP, and MVVM) should be chosen to provide clear separation between UI, state, and domain logic, especially for UI-centric applications.</li>
+<li>Regardless of pattern, systems should emphasize:
+
+<ul>
+<li>Stable <strong>interface contracts</strong> between components and services.</li>
+<li>Encapsulation of business rules in testable, framework-light modules.</li>
+<li>The ability to substitute implementations (for example, swapping data stores, external services, or UI frameworks) without widespread changes.</li>
+</ul></li>
+</ul>
+
+<h3>2.4 Simplicity, Explicitness, and Readability</h3>
+
+<p><strong>Intent</strong></p>
+
+<p>Optimize for code and designs that are easy to understand, explain, and maintain.</p>
+
+<p><strong>Guidance</strong></p>
+
+<ul>
+<li>Prefer <strong>explicit behavior</strong> and clear control flow over clever or implicit constructs.</li>
+<li>Choose the simplest design that satisfies current requirements and known near-term needs, while avoiding excessive generalization for hypothetical futures.</li>
+<li>Code should be written for humans first and machines second. Readability and clarity are primary design goals.</li>
+<li>Error handling should be deliberate: errors should not be silently ignored, and intentional suppression should be explicit and justified.</li>
+</ul>
+
+<h3>2.5 Experience and Learning</h3>
+
+<p><strong>Intent</strong></p>
+
+<p>Recognize that experience—human and organizational—is a critical factor in successful software engineering, and encode mechanisms to accumulate and apply it.</p>
+
+<p><strong>Guidance</strong></p>
+
+<ul>
+<li>Experience is not just tenure; it is <strong>repeated exposure to the full lifecycle</strong> of design, implementation, deployment, and support.</li>
+<li>Teams should create feedback channels that surface:
+
+<ul>
+<li>Production issues and incident reports.</li>
+<li>Testing gaps and recurring defects.</li>
+<li>Usability and accessibility findings.</li>
+<li>Operational pain points, such as difficult deployments or brittle integrations.</li>
+</ul></li>
+<li>Lessons learned should be fed back into standards, patterns, libraries, and training so that the organization improves over time.</li>
+</ul>
+
+<h3>2.6 Iteration and Refactoring as a Continuous Loop</h3>
+
+<p><strong>Intent</strong></p>
+
+<p>Treat iterative delivery and refactoring as complementary parts of the same process rather than competing concerns.</p>
+
+<p><strong>Guidance</strong></p>
+
+<ul>
+<li>Teams are expected to work in cycles:
+
+<ul>
+<li>Deliver a working, valuable increment or MVP.</li>
+<li>Validate with tests, monitoring, and user feedback.</li>
+<li>Refactor to improve internal structure based on what has been learned.</li>
+<li>Plan the next increment and continue.</li>
+</ul></li>
+<li>Refactoring is a <strong>planned, disciplined activity</strong> aimed at improving design without changing external behavior.</li>
+<li>Iteration is not an excuse for poor structure, and refactoring is not an excuse to avoid shipping. Both must be kept in balance.</li>
+</ul>
+
+<blockquote>
+<p><strong>AI Guidance (for code and design generation):</strong><br>
+<em>Do not attempt to produce a final, fully comprehensive solution in one pass. Favor smaller, coherent increments that can be tested, reviewed, and refactored. Use later iterations to improve structure and address feedback.</em></p>
+</blockquote>
+
+<hr>
+
+<h2>3. Core Engineering Principles</h2>
+
+<p>This section summarizes principles that apply across all technologies and domains.</p>
+
+<h3>3.1 Standards-Compliant and Interoperable</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Software must conform to the official specifications of the languages, platforms, and protocols in use, avoiding undefined or implementation-specific behavior where possible.</li>
+<li>External interfaces (APIs, file formats, message schemas) must be defined using stable, versioned contracts and documented in appropriate formats.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Prefer vendor and standards-body guidelines for platform behavior and API design over custom house styles, unless stronger local guidance is clearly justified.</li>
+</ul>
+
+<h3>3.2 Maintainable and Human-Readable Code</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Code must be written in a clear, consistent style, following language- and framework-appropriate conventions.</li>
+<li>Functions, classes, and modules must have cohesive responsibilities and minimal, well-defined dependencies.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Avoid “clever” constructs that obscure intent. Favor straightforward, easily explainable designs.</li>
+<li>Optimize for long-term readability and changeability, not just brevity.</li>
+</ul>
+
+<h3>3.3 Secure and Privacy-Aware by Design</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Systems must follow core secure design principles including least privilege, defense in depth, secure defaults, and attack surface minimization.</li>
+<li>Personal and sensitive data must be collected and processed according to data minimization and privacy-by-default principles, protected by appropriate controls in transit and at rest.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Perform threat modeling for significant systems and major changes, and document risks and mitigations alongside architecture and requirements.</li>
+</ul>
+
+<h3>3.4 Scalable, Reliable, and Performant</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Designs must include explicit assumptions about scale and performance (such as expected user counts, data volumes, and latency targets) and these assumptions must be validated.</li>
+<li>Critical services must be designed for reliability appropriate to their impact, including strategies for redundancy and graceful degradation.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Favor simple, evolvable designs and loosely coupled components that can scale horizontally where appropriate.</li>
+</ul>
+
+<h3>3.5 Testable and Observable</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Code must be structured to enable testing at multiple levels (unit, integration, end-to-end) without excessive ceremony.</li>
+<li>Systems must emit logs and metrics—and, where appropriate, traces—that support diagnosis of failures and performance issues.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Design APIs and modules with testability as a first-class concern, not as an afterthought.</li>
+</ul>
+
+<h3>3.6 User-Centered and Accessible by Default</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>User interfaces must be designed for their actual users, with accessibility treated as a core requirement, not a bolt-on.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Validate usability and accessibility with real users or realistic simulations, especially in mobile and field environments.</li>
+</ul>
+
+<hr>
+
+<h2>4. Requirements and Planning</h2>
+
+<h3>4.1 Intent</h3>
+
+<p>Ensure that software is built against a clear, testable understanding of what it should do, and that requirements can evolve in a controlled way as teams learn.</p>
+
+<h3>4.2 Functional Requirements</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Functional requirements must describe system behaviors, inputs, outputs, and interactions with external systems in a clear and testable way.</li>
+<li>Each requirement must have acceptance criteria that can be validated.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Organize functional requirements by feature, user role, or workflow, in a way that aligns with how stakeholders think about the system.</li>
+</ul>
+
+<h3>4.3 Non-Functional Requirements</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Non-functional requirements (performance, availability, security, privacy, usability, accessibility, maintainability, and others) must be explicitly captured, not implied.</li>
+<li>Where feasible, non-functional requirements should be expressed in measurable terms.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Review non-functional requirements regularly as usage patterns and regulatory expectations evolve.</li>
+</ul>
+
+<h3>4.4 Prototyping as a Requirements Technique</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>For projects with non-technical stakeholders, unclear product vision, or strongly UX-driven outcomes, teams must consider using prototypes or wireframes as part of requirements elicitation.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Horizontal UI prototypes and vertical functional slices should be used to validate workflows, field usage, and user expectations early.</li>
+<li>Feedback from prototypes should be captured as requirements updates or clarifications, not left as informal notes.</li>
+</ul>
+
+<h3>4.5 Requirements Traceability and Change Management</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Requirements must be traceable to design elements, implementations, and tests, at least for high-priority and regulated areas.</li>
+<li>Changes to baseline requirements must follow a defined process, including impact analysis and approval.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use tools or lightweight practices that link work items, code changes, and test cases back to requirements.</li>
+</ul>
+
+<blockquote>
+<p><strong>AI Guidance (for requirements elaboration):</strong><br>
+<em>When expanding requirements, prefer precise, testable statements and respect existing scope. Use prototypes and examples to clarify ambiguous areas, and avoid inventing features or constraints that were not requested.</em></p>
+</blockquote>
+
+<hr>
+
+<h2>5. Reference Standards and Guidelines</h2>
+
+<h3>5.1 Intent</h3>
+
+<p>Anchor local standards in well-established external guidance rather than inventing bespoke rules for every project.</p>
+
+<h3>5.2 External Technical Standards</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Where applicable, web and digital content must align with recognized web accessibility standards at the conformance level required by policy.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Prefer widely adopted standards for protocols and data formats, especially on system boundaries.</li>
+</ul>
+
+<h3>5.3 Platform and Language Guidelines</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Platform-specific applications must follow official design and behavior guidelines for that platform unless there is a clear, documented reason to deviate.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use language- and framework-specific style and API design guidelines as the baseline, extending or profiling them locally only where needed.</li>
+</ul>
+
+<h3>5.4 Security and Privacy Guidance</h3>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>For systems in regulated or high-sensitivity environments, align security and privacy controls with recognized control catalogs and secure development guidance, using this standards document as the implementation and SDLC layer.</li>
+</ul>
+
+<hr>
+
+<h2>6. Data Design and Management</h2>
+
+<h3>6.1 Intent</h3>
+
+<p>Model, store, validate, and govern data in ways that support correctness, scalability, security, analytics, and compliance.</p>
+
+<h3>6.2 Data Modeling</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>A logical data model must be maintained for significant data domains, capturing entities, attributes, and relationships independent of any specific technology.</li>
+<li>Physical models (schemas, collections, indexes) must preserve the semantics of the logical model, with any denormalization or optimization documented.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>For complex domains, use conceptual, logical, and physical layers to separate business concepts from implementation details.</li>
+</ul>
+
+<h3>6.3 Storage Technology Selection</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Choice of data storage technology (relational, document, key-value, graph, time series, etc.) must be justified based on data characteristics, access patterns, consistency needs, and operational constraints.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Relational databases are generally preferred for workloads requiring strong consistency, complex queries, and transactional integrity.</li>
+<li>Document or other NoSQL stores may be preferred where schemas are highly variable, write throughput is very high, or hierarchical data fits naturally in that model.</li>
+</ul>
+
+<h3>6.4 Input Validation and Sanitization</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>All external inputs (user input, files, API payloads, messages) must be validated for type, range, length, and format before processing or storage.</li>
+<li>Parameterized queries or equivalent safe APIs must be used for all data access that builds on dynamic input.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Prefer allow-listed validation of acceptable formats over deny-listed checks for known-bad input.</li>
+</ul>
+
+<h3>6.5 Data Transformation and Migration</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Schema changes and significant data transformations must be version-controlled, repeatable, and reversible where feasible.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Favor additive, backward-compatible changes to support rolling deployments and minimize downtime.</li>
+</ul>
+
+<h3>6.6 Data Quality, Retention, and Governance</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Data quality rules critical to business or compliance must be enforced using constraints, validation, or monitoring.</li>
+<li>Data retention and archival policies must be defined and implemented in accordance with organizational and regulatory requirements.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Maintain a lightweight data catalog for key entities and fields to align understanding across teams.</li>
+</ul>
+
+<hr>
+
+<h2>7. Architecture and System Design</h2>
+
+<h3>7.1 Intent</h3>
+
+<p>Provide architectural guidance that results in systems which are modular, testable, scalable, and adaptable.</p>
+
+<h3>7.2 Architectural Principles</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Architectures must reflect separation of concerns, modularity, and clear boundaries between layers or services.</li>
+<li>Cross-cutting concerns (security, logging, configuration, observability) must be handled using consistent patterns, not ad hoc scattering.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Prefer simple, composable architectures over overly complex designs that are hard to understand or change.</li>
+</ul>
+
+<h3>7.3 Architectural and Presentation Patterns</h3>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use application-level patterns such as layered architecture, hexagonal/ports-and-adapters, or clean-style architectures to separate domain logic from infrastructure and frameworks.</li>
+<li>Use presentation patterns such as MVC, MVP, or MVVM for UI-heavy applications, choosing based on platform norms and testability needs.</li>
+<li>For small or short-lived applications, simpler patterns may be acceptable, but teams should recognize where they will not scale well.</li>
+</ul>
+
+<h3>7.4 Interface Contracts and Loose Coupling</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Components and services must interact through well-defined interface contracts that specify inputs, outputs, error conditions, and behavior under load.</li>
+<li>External APIs must be versioned and designed to minimize breaking changes.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Dependencies should point inward toward stable abstractions, not outward toward volatile implementation details.</li>
+<li>Interfaces should be designed to support substitution of implementations, such as different data stores, providers, or communication mechanisms.</li>
+</ul>
+
+<h3>7.5 Security and Privacy in Architecture</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Trust boundaries, authentication and authorization flows, data classification, and encryption requirements must be explicitly addressed in architectural designs.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use layered and defense-in-depth strategies so that no single control failure directly compromises critical assets.</li>
+</ul>
+
+<blockquote>
+<p><strong>AI Guidance (for architectural proposals):</strong><br>
+<em>When proposing architectures, be explicit about boundaries, interfaces, and trust zones. Prefer patterns that allow substitution and testing over tightly coupled, framework-centric designs.</em></p>
+</blockquote>
+
+<hr>
+
+<h2>8. Source Control and Branching Standards (Git)</h2>
+
+<h3>8.1 Intent</h3>
+
+<p>Ensure that all code, configuration, and infrastructure definitions are version-controlled and that work is organized in a way that supports review, testing, and safe integration.</p>
+
+<h3>8.2 Repository Organization</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Production code, infrastructure-as-code, and configuration templates must be stored in version control.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use a predictable repository structure so that engineers can quickly locate code, tests, and documentation.</li>
+</ul>
+
+<h3>8.3 Branching Strategy</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Changes must be developed on branches rather than directly in protected mainline branches.</li>
+<li>Protected branches (such as <code>main</code> or release branches) must require merge or pull requests with passing automated checks.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Choose a simple branching model suitable for the team size and release cadence, such as feature branches off a mainline, possibly with dedicated release branches for long-lived products.</li>
+</ul>
+
+<h3>8.4 Commits and Code Review</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Commits must be focused and have meaningful messages describing the change.</li>
+<li>All changes to protected branches must be reviewed by qualified peers or leads.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use code reviews to improve design, share knowledge, and reinforce standards rather than as pure gatekeeping.</li>
+</ul>
+
+<blockquote>
+<p><strong>AI Guidance (for change proposals):</strong><br>
+<em>Generate changes as small, coherent diffs suitable for code review. Include rationale, assumptions, and traceability to requirements or issues where possible.</em></p>
+</blockquote>
+
+<hr>
+
+<h2>9. Coding Standards and Practices</h2>
+
+<h3>9.1 Intent</h3>
+
+<p>Ensure consistency, readability, security, and maintainability in code across languages and platforms.</p>
+
+<h3>9.2 Language- and Platform-Specific Standards</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Each codebase must adopt a clear style guide aligned with language and framework norms.</li>
+<li>Any local deviations from commonly accepted standards must be documented and kept minimal.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use linters, formatters, and static analysis tools to enforce standards and catch common issues early.</li>
+</ul>
+
+<h3>9.3 Error Handling, Logging, and Defensive Coding</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Expected error conditions must be handled explicitly.</li>
+<li>Logs must provide sufficient context for troubleshooting while avoiding sensitive data exposure.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use defensive coding techniques where they improve robustness and diagnosability, such as assertions for invariants at internal boundaries.</li>
+</ul>
+
+<h3>9.4 Secure Coding</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Secure coding practices must be followed for input validation, output encoding, cryptographic usage, authentication and authorization, and secret management.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use automated tools (static analysis, dependency scanning) to detect common security issues.</li>
+</ul>
+
+<h3>9.5 Memory and Resource Safety</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>In languages that allow manual memory management or low-level operations, code must follow established secure coding standards and avoid unsafe constructs where safer alternatives exist.</li>
+<li>Resources (files, sockets, handles) must have clear ownership and lifecycle management.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Prefer memory-safe or safer-by-default languages and frameworks when they meet requirements for new development.</li>
+</ul>
+
+<hr>
+
+<h2>10. Documentation Standards</h2>
+
+<h3>10.1 Intent</h3>
+
+<p>Provide documentation that allows systems to be understood, maintained, and operated effectively.</p>
+
+<h3>10.2 Code-Level Documentation</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Public APIs and key components must be documented using language-appropriate mechanisms.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Inline comments should focus on explaining intent or non-obvious design decisions, not restating what is clear from the code.</li>
+</ul>
+
+<h3>10.3 Design and Architecture Documentation</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Significant systems must have up-to-date architectural documentation stored in version control.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use architecture decision records to document major choices, alternatives considered, and rationale.</li>
+</ul>
+
+<h3>10.4 Operational and User Documentation</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Systems with uptime or on-call expectations must have operational runbooks, deployment procedures, and incident response guidance.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>User-facing documentation should be task-oriented and updated in step with product changes.</li>
+</ul>
+
+<hr>
+
+<h2>11. Accessibility and Inclusive Design</h2>
+
+<h3>11.1 Intent</h3>
+
+<p>Ensure that software is usable by people with disabilities and meets applicable accessibility requirements.</p>
+
+<h3>11.2 Standards and Compliance</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Where required by policy or regulation, digital products must conform to the applicable accessibility standards, which often reference recognized web content accessibility guidelines.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Treat accessibility as a first-class non-functional requirement with explicit acceptance criteria and tests.</li>
+</ul>
+
+<h3>11.3 Assistive Technology and Real-World Usage</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>For web and application interfaces, critical workflows must be operable using assistive technologies and keyboard-only input.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Validate designs with real or simulated usage scenarios, such as mobile use in motion or noisy environments, to uncover issues with target controls, spacing, and clarity.</li>
+</ul>
+
+<h3>11.4 Practical Accessibility Practices</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Text, controls, and interactions must meet contrast, focus visibility, and error messaging requirements relevant to the chosen conformance level.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Integrate automated accessibility checks into CI where available and supplement with manual testing using assistive tools.</li>
+</ul>
+
+<hr>
+
+<h2>12. Testing and Quality Assurance</h2>
+
+<h3>12.1 Intent</h3>
+
+<p>Provide a risk-based testing approach that ensures correctness and quality while supporting iterative delivery.</p>
+
+<h3>12.2 Test Strategy and Levels</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Projects must define a test strategy describing the roles of unit, integration, end-to-end, and exploratory testing.</li>
+<li>Automated tests must be part of the normal development workflow and run in CI for supported stacks.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Follow a test-pyramid mindset, emphasizing fast, deterministic tests close to the code, complemented by focused higher-level tests for critical scenarios.</li>
+</ul>
+
+<h3>12.3 Code Coverage</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Code coverage must be measured at least for critical components, and minimum thresholds should be defined and enforced for new or changed code.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use coverage as a guide to risk-based testing rather than as a superficial metric to maximize.</li>
+</ul>
+
+<h3>12.4 Manual and Exploratory Testing</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Complex, high-risk, or UX-critical features must undergo structured manual or exploratory testing.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Include accessibility, performance, and resilience behaviors in exploratory test charters where relevant.</li>
+</ul>
+
+<blockquote>
+<p><strong>AI Guidance (for test generation):</strong><br>
+<em>Generate tests that reflect real usage patterns and edge cases, not just simple happy paths. Align tests with explicit requirements and acceptance criteria, and avoid relying solely on code coverage as a proxy for quality.</em></p>
+</blockquote>
+
+<hr>
+
+<h2>13. Continuous Integration and Continuous Delivery (CI/CD)</h2>
+
+<h3>13.1 Intent</h3>
+
+<p>Automate build, test, and deployment processes to deliver changes safely and quickly.</p>
+
+<h3>13.2 CI Pipelines</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>All changes merged into protected branches must pass a CI pipeline that, at minimum, runs builds, automated tests, and static analysis where available.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Pipelines should be optimized for fast feedback through parallelization and appropriate scoping of checks.</li>
+</ul>
+
+<h3>13.3 Quality Gates</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>CI/CD pipelines must include quality gates for critical checks such as test pass rate and required static analysis or policy checks.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Quality gates should evolve as the system and risk profile evolve, rather than remaining static.</li>
+</ul>
+
+<h3>13.4 Deployment Strategies</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Production deployments must be controlled, auditable, and reversible.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use progressive deployment strategies (such as blue/green, canary releases, or feature flags) where feasible to reduce risk.</li>
+</ul>
+
+<hr>
+
+<h2>14. Performance and Resource Management</h2>
+
+<h3>14.1 Intent</h3>
+
+<p>Ensure that systems meet performance goals and use resources efficiently.</p>
+
+<h3>14.2 Performance Targets and Budgets</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Key services must define performance targets and resource usage expectations and validate them under realistic load.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Establish service-level objectives where appropriate and align monitoring and alerting with them.</li>
+</ul>
+
+<h3>14.3 Profiling and Optimization</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Performance problems discovered in testing or production must be investigated with appropriate profiling tools, and changes must be validated with follow-up measurements.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Avoid premature optimization; focus on bottlenecks and high-impact improvements identified by data.</li>
+</ul>
+
+<hr>
+
+<h2>15. Observability, Logging, and Operations</h2>
+
+<h3>15.1 Intent</h3>
+
+<p>Provide telemetry and operational practices that support reliable operation and effective incident response.</p>
+
+<h3>15.2 Telemetry</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Systems must emit logs and metrics that enable diagnosis of failures, performance issues, and unusual behavior.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use structured logging and consistent metric naming to simplify analysis.</li>
+</ul>
+
+<h3>15.3 Alerting and Incident Management</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Alerts must be defined for critical conditions and integrated with on-call or incident response processes.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Regularly review and tune alerts to minimize noise and ensure they reflect real impact.</li>
+</ul>
+
+<hr>
+
+<h2>16. Compliance, Risk, and Dependency Management</h2>
+
+<h3>16.1 Intent</h3>
+
+<p>Identify and manage compliance obligations, technical risks, and third-party dependencies in a systematic way that supports secure development and delivery.</p>
+
+<h3>16.2 Regulatory and Policy Alignment</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Applicable regulatory, contractual, and internal policy requirements that affect development and delivery must be identified and tracked as non-functional requirements.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Where security and privacy controls are required, map them to concrete design, implementation, and testing activities.</li>
+</ul>
+
+<h3>16.3 Third-Party and Open-Source Dependencies</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Dependencies must be tracked, versioned, and scanned for known vulnerabilities and license risks as part of CI/CD.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Prefer mature, well-maintained dependencies with clear licensing. Avoid unnecessary or untrusted libraries when a standard library or existing approved component suffices.</li>
+</ul>
+
+<h3>16.4 Risk Management</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Projects must maintain a view of major technical risks, including architectural, security, and operational risks, with mitigation plans.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use risk information to influence planning, testing, and refactoring priorities.</li>
+</ul>
+
+<hr>
+
+<h2>17. Legacy Systems</h2>
+
+<h3>17.1 Intent</h3>
+
+<p>Handle systems built on older technologies or practices in a way that controls risk and supports modernization.</p>
+
+<h3>17.2 Identification and Profiling</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Legacy systems must be explicitly identified, with at least a high-level profile covering technology stack, key risks, and constraints.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Maintain concise documentation of modernization strategies for legacy systems.</li>
+</ul>
+
+<h3>17.3 Application of Standards</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>New work around legacy systems (such as new services or integrations) must follow current standards.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use encapsulation and gradual replacement patterns to reduce the blast radius of risky or outdated components.</li>
+</ul>
+
+<hr>
+
+<h2>18. Technical Debt Management</h2>
+
+<h3>18.1 Intent</h3>
+
+<p>Recognize, track, and deliberately manage technical debt so that it remains a controlled decision rather than an unmanaged liability.</p>
+
+<h3>18.2 Identification and Tracking</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Known technical debt items (shortcuts, missing tests, suboptimal designs) must be recorded in a visible backlog.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Categorize debt by type and severity to guide prioritization.</li>
+</ul>
+
+<h3>18.3 Prioritization and Remediation</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>Teams must periodically review technical debt and plan remediation for high-risk items.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Combine opportunistic remediation (fixing debt when working in the area) with targeted efforts for the most impactful issues.</li>
+</ul>
+
+<blockquote>
+<p><strong>AI Guidance (for refactoring suggestions):</strong><br>
+<em>When proposing refactors, focus on changes that improve clarity, modularity, and testability without altering intended behavior. Clearly separate structural refactors from feature changes.</em></p>
+</blockquote>
+
+<hr>
+
+<h2>19. Governance and Evolution</h2>
+
+<h3>19.1 Intent</h3>
+
+<p>Ensure that this standards document remains accurate, adopted, and responsive to change.</p>
+
+<h3>19.2 Ownership and Change Control</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>A designated owner or body is responsible for maintaining this document, reviewing proposed changes, and publishing new versions.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Use a lightweight proposal process for changes that allows input from affected stakeholders.</li>
+</ul>
+
+<h3>19.3 Continuous Improvement</h3>
+
+<p><strong>Mandatory</strong></p>
+
+<ul>
+<li>This standard must be reviewed periodically to incorporate lessons learned, new technologies, and updated external references.</li>
+</ul>
+
+<p><strong>Recommended</strong></p>
+
+<ul>
+<li>Feedback from projects, incidents, and audits should be used to refine guidance and examples.</li>
+</ul>
+
+<hr>
+
+<h2>Appendix A – References and Links</h2>
+
+<p>This appendix lists selected external standards, guidelines, and resources referenced by or aligned with this document. URLs and specific versions should be maintained by the standards owner.</p>
+
+<h3>Accessibility and Legal</h3>
+
+<ul>
+<li>Web Content Accessibility Guidelines (WCAG) – W3C: https://www.w3.org/WAI/standards-guidelines/wcag/</li>
+<li>Web Content Accessibility Guidelines 2.1 – W3C: https://www.w3.org/TR/WCAG21/</li>
+<li>Web Content Accessibility Guidelines 2.2 – W3C: https://www.w3.org/TR/WCAG22/</li>
+<li>Section 508 – U.S. Federal IT Accessibility Requirements: https://www.section508.gov/</li>
+</ul>
+
+<h3>Platform and Language Guidelines</h3>
+
+<ul>
+<li>Apple Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines</li>
+<li>Android App Architecture Guide: https://developer.android.com/topic/architecture</li>
+<li>Swift API Design Guidelines: https://www.swift.org/documentation/api-design-guidelines/</li>
+<li>Java SE Documentation – Oracle: https://docs.oracle.com/en/java/</li>
+<li>.NET Documentation – Microsoft: https://learn.microsoft.com/dotnet/</li>
+<li>Go Documentation: https://go.dev/doc/</li>
+<li>Rust Documentation: https://www.rust-lang.org/learn</li>
+<li>Ruby Documentation: https://www.ruby-lang.org/en/documentation/</li>
+<li>JavaScript Guide – MDN: https://developer.mozilla.org/docs/Web/JavaScript/Guide</li>
+<li>TypeScript Documentation: https://www.typescriptlang.org/docs/</li>
+</ul>
+
+<h3>Security and Privacy</h3>
+
+<ul>
+<li>NIST SP 800-53 – Security and Privacy Controls for Information Systems and Organizations: https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final</li>
+<li>OWASP Cheat Sheet Series: https://cheatsheetseries.owasp.org/</li>
+<li>OWASP Input Validation Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Input<em>Validation</em>Cheat_Sheet.html</li>
+<li>OWASP Injection Prevention Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Injection<em>Prevention</em>Cheat_Sheet.html</li>
+<li>OWASP REST Security Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/REST<em>Security</em>Cheat_Sheet.html</li>
+<li>OWASP SQL Injection: https://owasp.org/www-community/attacks/SQL_Injection</li>
+</ul>
+
+<h3>Data and Databases</h3>
+
+<ul>
+<li>Relational vs. NoSQL Data – Microsoft Learn: https://learn.microsoft.com/dotnet/architecture/cloud-native/relational-vs-nosql-data</li>
+<li>Conceptual vs Logical vs Physical Data Models – Visual Paradigm: https://online.visual-paradigm.com/knowledge/visual-modeling/conceptual-vs-logical-vs-physical-data-model/</li>
+</ul>
+
+<h3>Accessibility Tools</h3>
+
+<ul>
+<li>JAWS Screen Reader – Freedom Scientific: https://support.freedomscientific.com/Downloads/JAWS</li>
+<li>NVDA Screen Reader: https://www.nvaccess.org/download/</li>
+<li>Apple Accessibility – VoiceOver: https://www.apple.com/accessibility/vision/</li>
+<li>Android Accessibility Overview: https://support.google.com/accessibility/android/answer/6006564</li>
+</ul>
+
+<h3>Design Patterns and Architecture</h3>
+
+<ul>
+<li>Design Patterns (GoF) Overview – Wikipedia: https://en.wikipedia.org/wiki/Design_Patterns</li>
+<li>Gang of Four Design Patterns Explained – DigitalOcean: https://www.digitalocean.com/community/tutorials/gangs-of-four-gof-design-patterns</li>
+<li>Hexagonal Architecture (Ports and Adapters): https://en.wikipedia.org/wiki/Hexagonal<em>architecture</em>(software)</li>
+<li>Demystifying Software Architecture Patterns – Thoughtworks: https://www.thoughtworks.com/insights/blog/architecture/demystify-software-architecture-patterns</li>
+</ul>
+
+<h3>DevOps and Version Control</h3>
+
+<ul>
+<li>Git Branching Strategies – GitLab: https://docs.gitlab.com/user/project/repository/branches/strategies/</li>
+<li>What is GitLab Flow? – GitLab: https://about.gitlab.com/topics/version-control/what-is-gitlab-flow/</li>
+</ul>
+
+<h3>Engineering Philosophy</h3>
+
+<ul>
+<li>PEP 20 – The Zen of Python: https://peps.python.org/pep-0020/</li>
+</ul>
+
+<hr>
+
+<h2>Revision History</h2>
+
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Author / Owner</th>
+<th>Summary of Changes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0.9 Draft</td>
+<td>2026-05-31</td>
+<td>Beyond The Code LLC</td>
+<td>Initial draft for review.</td>
+</tr>
+<tr>
+<td>0.9.1</td>
+<td>2026-08-23</td>
+<td>Beyond The Code LLC</td>
+<td>Revised title; added Design and Delivery Philosophy; integrated A–F concepts; updated references and guidance.</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+
+<h2>Legal and Licensing Notice</h2>
+
+<p><strong>Legal Notice:</strong><br>
+This document is provided “as is” without warranties of any kind. Use it at your own risk.</p>
+
+<p><strong>Copyright:</strong><br>
+© 2026 Beyond The Code LLC.</p>
+
+<p><strong>License:</strong><br>
+This work is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0):<br>
+<a href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a></p>
+
+<p><strong>Attribution Requirement:</strong><br>
+If you share or adapt this work, you must provide appropriate credit to Beyond The Code LLC, include a link to the CC BY 4.0 license, and indicate whether changes were made.</p>
+
+<p><strong>Suggested Attribution:</strong><br>
+“Close the Loop: Software Engineering Standards for Code, Data, and Delivery” © 2026 Beyond The Code LLC, licensed under CC BY 4.0.</p>
+
+<p><strong>No Endorsement:</strong><br>
+Use of this work does not imply endorsement by Beyond The Code LLC.</p>
+
+<p><strong>Trademarks:</strong><br>
+Beyond The Code LLC and associated names, logos, and marks are not licensed under CC BY 4.0 unless expressly stated otherwise.</p>
+
+
+
+
+</body>
+
+</html>
