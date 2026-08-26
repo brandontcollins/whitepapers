@@ -12,3 +12,13 @@
 > A practical guide to passwords, passkeys, hardware keys, and macOS update strategy for developers and security‑conscious users.
 
 -
+
+### Close the Loop: Software Engineering Standards for Code, Data, and Delivery
+
+- **Version:** 1.0.0 (August 2026)    
+- **HTML:** [Read online](https://research.c0llins.us/close-the-loop-software-engineering-standards/)
+- **PDF:** [Download](https://research.c0llins.us/close-the-loop-software-engineering-standards/dist/close-the-loop-software-engineering-standards_v1.0.0.pdf)
+
+> A technology-agnostic reference for building secure, maintainable software through disciplined delivery, feedback, and continuous improvement.
+
+-
