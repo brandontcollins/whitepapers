@@ -2,7 +2,7 @@
 
 **Author:** Brandon T. Collins  
 **Affiliation:** Founder & Principal Engineer, Beyond The Code LLC  
-**Contact:** brandon.t@c0llins.us  
+**Contact:** brandon@beyondthecode.us  
 **Version:** 1.0.0  
 **Date:** August 2026
 
